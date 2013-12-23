@@ -3,6 +3,7 @@
               (stdlib logging)
 							((sdl sdl) #:prefix SDL:)
 							((sdl gfx) #:prefix SDL:)
+							((sdl ttf) #:prefix SDL:)
 							(srfi srfi-1)
 							(srfi srfi-2)
 							(srfi srfi-9 gnu)
@@ -12,6 +13,7 @@
 							
 ; handle quit event
 (define (handle-quit)
+  (SDL:ttf-quit)
 	(SDL:quit)
 	(quit)
 	)
@@ -35,7 +37,12 @@
 (define (main-loop settings scene fps-manager)
   (SDL:fps-manager-delay! fps-manager) ; perform variable delay based on given FPS
 	(handle-event scene)
-	((scene-render scene) settings)
+
+  (let ((screen (SDL:display-format (SDL:make-surface (settings-screen-width settings) (settings-screen-height settings)))))
+	  ((scene-render scene) screen (scene-resources scene))
+		; copy this surface to the screen
+		(SDL:blit-surface screen)
+		(SDL:flip))
 
   ; loop
 	(main-loop settings scene fps-manager)
@@ -44,10 +51,12 @@
 ; prepare sdl
 (define (init logging-level width height bpp fps)
   (set-logging-level! logging-level)
+  (println "Visible logging levels: " (visible-logging-levels))
   (log! 'INFO "Starting game [" width "x" height " " bpp "bpp " fps "fps]")
 
 	; set up video
 	(SDL:init 'video)
+  (SDL:ttf-init)
 	(SDL:set-video-mode width height bpp 'hw-surface)
 	
 	; jump into game

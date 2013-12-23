@@ -22,16 +22,17 @@
 	)
 	
 ; drawing
-(define (title-render settings)
-	(let* ((screen (SDL:display-format (SDL:make-surface (settings-screen-width settings) (settings-screen-height settings))))
-				(format (SDL:surface-get-format screen)))
-		(SDL:blit-surface (SDL:load-image "resources/adansoft.png") (SDL:make-rect 0 0 320 240) screen)
-	
-		; copy this surface to the screen
-		(SDL:blit-surface screen)
-		(SDL:flip)
-		)
+(define (title-render screen resources)
+		(SDL:blit-surface (find-image resources "adansoft") (SDL:make-rect 0 0 320 240) screen)
 	)
 	
-(define (make-title-scene) (make-scene title-render title-handle-key-up title-handle-key-down))
+(define (make-title-scene) 
+  (log! 'DEBUG "Making title scene")
+  (make-scene 
+    (make-resources 
+      '(IMAGE "adansoft" "resources/adansoft.png")
+      )
+    title-render 
+    title-handle-key-up 
+    title-handle-key-down))
 	
