@@ -1,4 +1,6 @@
-(use-modules 	(stdlib print)
+(use-modules  (stdlib print)
+              (stdlib utils)
+              (stdlib logging)
 							((sdl sdl) #:prefix SDL:)
 							((sdl gfx) #:prefix SDL:)
 							(srfi srfi-1)
@@ -21,34 +23,39 @@
 			; event happened
 			(case (SDL:event:type e)
 				((quit) (handle-quit))
-				((key-down) ((scene-handle-key-down scene) (SDL:event:key:keysym:sym e)))
-				((key-up) ((scene-handle-key-up scene) (SDL:event:key:keysym:sym e)))
-				(else #f)
+				((key-down) (begin (log! 'DEBUG "Pressed[" (SDL:event:key:keysym:sym e) "]") ((scene-handle-key-down scene) (SDL:event:key:keysym:sym e))))
+				((key-up) (begin (log! 'DEBUG "Released[" (SDL:event:key:keysym:sym e) "]") ((scene-handle-key-up scene) (SDL:event:key:keysym:sym e))))
+				(else do-nothing)
 				)
 			; no event
-			#f)
+			do-nothing)
 			))
 			
 ; main game loop
-(define (main-loop settings scene)
-	; draw to the screen
-	;(render settings state)
-	; update state based on events and pass new state back into the next iteration of the loop
-	;(main-loop settings (update-state settings ((handle-event) state)))
+(define (main-loop settings scene fps-manager)
+  (SDL:fps-manager-delay! fps-manager) ; perform variable delay based on given FPS
 	(handle-event scene)
 	((scene-render scene) settings)
-	(main-loop settings scene)
+
+  ; loop
+	(main-loop settings scene fps-manager)
 	)
 	
 ; prepare sdl
-(define (init width height bpp)
+(define (init logging-level width height bpp fps)
+  (set-logging-level! logging-level)
+  (log! 'INFO "Starting game [" width "x" height " " bpp "bpp " fps "fps]")
+
 	; set up video
 	(SDL:init 'video)
 	(SDL:set-video-mode width height bpp 'hw-surface)
 	
 	; jump into game
-	(main-loop (make-settings width height) (make-game-initial-scene))
+	(main-loop 
+    (make-settings width height) 
+    (make-game-initial-scene)
+    (SDL:make-fps-manager fps))
 	)
 
 ; entry point
-(init 320 240 16)
+(init 'DEBUG 320 240 16 60)
