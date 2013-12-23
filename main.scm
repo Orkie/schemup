@@ -4,6 +4,7 @@
 							((sdl sdl) #:prefix SDL:)
 							((sdl gfx) #:prefix SDL:)
 							((sdl ttf) #:prefix SDL:)
+							((sdl mixer) #:prefix SDL:)
 							(srfi srfi-1)
 							(srfi srfi-2)
 							(srfi srfi-9 gnu)
@@ -13,6 +14,7 @@
 							
 ; handle quit event
 (define (handle-quit)
+  (SDL:close-audio)
   (SDL:ttf-quit)
 	(SDL:quit)
 	(quit)
@@ -57,6 +59,7 @@
 	; set up video
 	(SDL:init 'video)
   (SDL:ttf-init)
+  (SDL:open-audio)
 	(SDL:set-video-mode width height bpp 'hw-surface)
 	
 	; jump into game

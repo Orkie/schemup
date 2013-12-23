@@ -6,6 +6,8 @@
               (stdlib logging)
 							((sdl sdl) #:prefix SDL:)
 							((sdl gfx) #:prefix SDL:)
+							((sdl ttf) #:prefix SDL:)
+							((sdl mixer) #:prefix SDL:)
 							(srfi srfi-1)
 							(srfi srfi-2)
 							(srfi srfi-9 gnu))
@@ -20,7 +22,11 @@
 
 (define (do-nothing scene state) `(,scene ,state))
 
+;; resource loading/definition
 (define IMAGE)
+(define FONT)
+(define MUSIC)
+(define SOUND)
 
 (define (build-resource-key resource-entry)
   `(,(car resource-entry) . ,(cadr resource-entry)))
@@ -31,6 +37,8 @@
       (log! 'DEBUG "Loading resource [" type ", " filename"]")
       (case type
         ((IMAGE) (load-image filename))
+        ((FONT) (load-font filename))
+        ((MUSIC) (load-music filename))
         (else (begin (log! 'ERROR "Could not handle type " type) #f))
         )))
 
@@ -42,9 +50,11 @@
     (if (null? rest)
       resmap
       (loop resmap (car rest) (cdr rest)))
-  )) 
+  ))
+(define (get-resource resources type name) (hash-ref resources `(,type . ,name)))
 
-(define (find-image resources name) (hash-ref resources `(IMAGE . ,name)))
+;; image-related functions
+(define (find-image resources name) (get-resource resources 'IMAGE name))
 (define (load-image filename)
   (let ((image-surface (SDL:load-image filename)))
     (if (not image-surface)
@@ -52,5 +62,14 @@
       (SDL:display-format image-surface)
     )))
 
+;; font-related functions
 (define (load-font filename) (SDL:load-font filename))
+
+;; music-related functions
+(define (load-music filename) 
+  (let ((music (SDL:load-music filename)))
+    (if (not music)
+      (log! 'ERROR "Could not load music " filename)
+      music)
+  ))
 

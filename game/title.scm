@@ -31,6 +31,7 @@
   (make-scene 
     (make-resources 
       '(IMAGE "adansoft" "resources/adansoft.png")
+      '(MUSIC "background-music" "resources/testogg.ogg")
       )
     title-render 
     title-handle-key-up 
