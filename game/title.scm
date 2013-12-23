@@ -1,6 +1,6 @@
 (define-module (game title)
   #:export (make-title-scene))
-(use-modules 	(stdlib print)
+(use-modules 	(stdlib logging)
 							((sdl sdl) #:prefix SDL:)
 							((sdl gfx) #:prefix SDL:)
 							(srfi srfi-1)
@@ -10,21 +10,15 @@
 							(engine settings))
   
 (define (title-handle-key-down key)
-	(display "keydown: ") 
-	(display key) 
-	(display "\n")
 	(case key
 		;((escape) (handle-quit))
-		(else #f))
+		(else do-nothing))
 	)
 	
 (define (title-handle-key-up key)
-	(display "keyup: ") 
-	(display key) 
-	(display "\n")
 	(case key
 		;((escape) (handle-quit))
-		(else #f))
+		(else do-nothing))
 	)
 	
 ; drawing
