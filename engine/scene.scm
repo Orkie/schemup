@@ -1,7 +1,7 @@
 (define-module (engine scene)
   #:export (make-scene scene-resources scene-render scene-handle-key-up scene-handle-key-down 
             do-nothing 
-            make-resources find-image))
+            make-resources find-image find-font find-music find-sound))
 (use-modules 	(stdlib print)
               (stdlib logging)
 							((sdl sdl) #:prefix SDL:)
@@ -37,8 +37,9 @@
       (log! 'DEBUG "Loading resource [" type ", " filename"]")
       (case type
         ((IMAGE) (load-image filename))
-        ((FONT) (load-font filename))
+        ((FONT) (load-font filename (cadddr resource-entry)))
         ((MUSIC) (load-music filename))
+        ((SOUND) (load-music filename))
         (else (begin (log! 'ERROR "Could not handle type " type) #f))
         )))
 
@@ -59,17 +60,29 @@
   (let ((image-surface (SDL:load-image filename)))
     (if (not image-surface)
       (log! 'ERROR "Could not load image " filename)
-      (SDL:display-format image-surface)
-    )))
+      (SDL:display-format image-surface))))
 
 ;; font-related functions
-(define (load-font filename) (SDL:load-font filename))
+(define (find-font resources name) (get-resource resources 'FONT name))
+(define (load-font filename ptsize) 
+  (let ((font (SDL:load-font filename ptsize)))
+    (if (not font)
+      (log! 'ERROR "Could not load font" filename " at " ptsize "pt")
+      font)))
 
 ;; music-related functions
+(define (find-music resources name) (get-resource resources 'MUSIC name))
 (define (load-music filename) 
   (let ((music (SDL:load-music filename)))
     (if (not music)
       (log! 'ERROR "Could not load music " filename)
-      music)
-  ))
+      music)))
+
+;; sound-related functions
+(define (find-sound resources name) (get-resource resources 'SOUND name))
+(define (load-sound filename) 
+  (let ((sound (SDL:load-wave filename)))
+    (if (not sound)
+      (log! 'ERROR "Could not load sound " filename)
+      sound)))
 
