@@ -1,3 +1,27 @@
 http://opengameart.org/content/pack-4-random-spaceships
 http://openfontlibrary.org/en/font/peleja
 http://openfontlibrary.org/en/font/fifteen
+
+gui element onFocus, onDefocus?
+
+UI element:
+  render
+  widget
+  focus
+  defocus
+
+should scenes have timer triggers?
+  e.g. when X time is passed, run this function
+
+could have a generic concept of triggers when F(state) returns true, call F'(state)
+and provide a stock timer trigger which can be used
+e.g. 
+(define (timer-trigger ms-from-now)
+  (let ((time-to-trigger (+ (SDL:get-ticks) ms-from-now)))
+    (lambda (state) (if (> (SDL:get-ticks) time-to-trigger)) #t #f)))
+
+How to determine if it's a once only-trigger or a repeating?
+When setting up, have an 'N' times? Store this number along with the trigger. 
+After each run, if not 0, subtract 1. If the result of doing so is 0, then remove.
+NOTE: the 0 check is only run if the subtraction runs! 0 indicates 
+an infinite trigger. 1 is once, 2 is twice etc.
