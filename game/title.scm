@@ -37,11 +37,17 @@
   #f)
 
 (define (make-initial-title-state resources)
+  (SDL:enable-key-repeat 200 80)
+
   (menu-define 
     (SDL:render-text (find-font resources "peleja16") ">" WHITE)
       (find-font resources "peleja16") BLACK RED 
-    '(("Entry 1" do-nothing)
-      ("Entry 2" do-nothing)))
+    '(("Play" do-nothing)
+      ("Settings" do-nothing)
+      ("Exit" do-nothing)
+      ("Exit" do-nothing)
+      ("Exit" do-nothing)
+      ("Exit" do-nothing)))
   )
 	
 (define (make-title-scene) 
