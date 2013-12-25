@@ -1,5 +1,5 @@
 (define-module (engine scene)
-  #:export (make-scene scene-resources scene-render scene-handle-key-up scene-handle-key-down 
+  #:export (make-scene scene-resources scene-render scene-handle-key-up scene-handle-key-down scene-update 
             do-nothing 
             make-resources find-image find-font find-music find-sound))
 (use-modules 	(stdlib print)
@@ -13,12 +13,13 @@
 							(srfi srfi-9 gnu))
 
 (define-immutable-record-type <scene>
-	(make-scene resources render handle-key-up handle-key-down)
+	(make-scene resources render handle-key-up handle-key-down update)
 	scene?
   (resources        scene-resources)
 	(render						scene-render)
 	(handle-key-up		scene-handle-key-up)
-	(handle-key-down	scene-handle-key-down))
+	(handle-key-down	scene-handle-key-down)
+  (update           scene-update))
 
 (define (do-nothing scene state) `(,scene ,state))
 
