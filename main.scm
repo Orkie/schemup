@@ -43,7 +43,7 @@
   (let* ((current-time (SDL:get-ticks))
          (time-taken (- current-time last-time)))
     (set! last-time current-time)
-    (set! average-time-per-frame (+ (* average-time-per-frame 0.8) (* time-taken 0.2)))
+    (set! average-time-per-frame (+ (* average-time-per-frame 0.975) (* time-taken 0.025)))
   )
   (round (/ 1000 average-time-per-frame)))
 			
@@ -52,7 +52,9 @@
   (SDL:fps-manager-delay! fps-manager) ; perform variable delay based on given FPS
 	(handle-event scene state)
 
-  (let ((screen (SDL:get-video-surface)))
+  (let* ((screen (SDL:get-video-surface))
+         (update-state-scene ((scene-update scene) (scene-resources scene) state))
+         (next-state-scene (if (not update-state-scene) (cons state scene) update-state-scene)))
     (SDL:fill-rect screen #f (SDL:map-rgb (SDL:surface-get-format screen) BLACK))
 	  ((scene-render scene) screen (scene-resources scene) state)
 		; copy this surface to the screen
@@ -61,10 +63,9 @@
     (if (settings-show-fps settings)
       (SDL:blit-surface (SDL:render-text (find-font master-resources "fifteen16") (number->string (recalculate-fps)) WHITE BLACK)))
     ; flip
-		(SDL:flip))
-
-  ; loop
-	(main-loop settings scene fps-manager master-resources state)
+		(SDL:flip)
+    ; loop
+	  (main-loop settings (cdr next-state-scene) fps-manager master-resources (car next-state-scene)))
 	)
 	
 ; prepare sdl
@@ -79,6 +80,8 @@
   (SDL:open-audio)
 	(SDL:set-video-mode width height bpp '(hw-surface doublebuf))
   (SDL:set-caption game-name)
+
+  (set! TRANSPARENT-COLOUR (SDL:map-rgb (SDL:surface-get-format (SDL:get-video-surface)) 255 0 255))
 
   ; prepare FPS-calculation variables so it's correct from the start
   (set! last-time (SDL:get-ticks))
