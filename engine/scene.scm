@@ -1,6 +1,6 @@
 (define-module (engine scene)
   #:export (make-scene scene-resources scene-render scene-handle-key-up scene-handle-key-down scene-update 
-            do-nothing 
+            do-nothing key-repeat-on key-repeat-off
             make-resources find-image find-font find-music find-sound))
 (use-modules 	(stdlib print)
               (stdlib logging)
@@ -21,6 +21,8 @@
 	(handle-key-down	scene-handle-key-down)
   (update           scene-update))
 
+(define (key-repeat-on) (SDL:enable-key-repeat 200 80))
+(define (key-repeat-off) (SDL:enable-key-repeat 0 80))
 (define (do-nothing scene state) `(,scene ,state))
 
 ;; resource loading/definition

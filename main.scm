@@ -78,7 +78,7 @@
 	(SDL:init 'video)
   (SDL:ttf-init)
   (SDL:open-audio)
-	(SDL:set-video-mode width height bpp '(hw-surface doublebuf))
+	(SDL:set-video-mode width height bpp '(hw-surface doublebuf src-alpha))
   (SDL:set-caption game-name)
 
   (set! TRANSPARENT-COLOUR (SDL:map-rgb (SDL:surface-get-format (SDL:get-video-surface)) 255 0 255))
@@ -100,4 +100,4 @@
       (car initial-game-scene))))
 
 ; entry point
-(init 'DEBUG 320 240 16 60 #t)
+(init 'DEBUG 320 240 32 60 #t)

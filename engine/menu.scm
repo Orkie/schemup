@@ -64,7 +64,7 @@
 
 ;; TODO - decoration? alignment? selected cursor?
 (define (menu-render menu)
-  (let loop ((surface (new-surface (menu-entry-width menu) (* (menu-entry-height menu) (length (menu-entries menu)))))
+  (let loop ((surface (new-surface (menu-entry-width menu) (* (menu-entry-height menu) (length (menu-entries menu))) #f))
              (current-y 0)
              (current-index 1)
              (current-entry (car (menu-entries menu)))

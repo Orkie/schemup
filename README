@@ -25,3 +25,10 @@ When setting up, have an 'N' times? Store this number along with the trigger.
 After each run, if not 0, subtract 1. If the result of doing so is 0, then remove.
 NOTE: the 0 check is only run if the subtraction runs! 0 indicates 
 an infinite trigger. 1 is once, 2 is twice etc.
+
+Transition scenes - scenes probably need a focus/unfocus. This could negate the need 
+for GUI elements.
+
+Probably want a common function to handle the actual changeover point between two 
+scenes: calling focus/unfocus etc. and building the pair to return?
+
