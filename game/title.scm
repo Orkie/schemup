@@ -29,19 +29,18 @@
 ; drawing
 (define (title-render screen resources state)
     (draw (find-image resources "adansoft") screen 0 0)
-    (draw (menu-render state) screen 'centre 'centre)
-    ;(draw (SDL:render-text (find-font resources "peleja16") "Hello World!" (SDL:make-color 255 0 0)) screen 'centre 'centre)
+    (draw (decorate (menu-render state) 260) screen 'centre 'centre)
   )
 
 (define (title-update resources state) 
   #f)
 
 (define (make-initial-title-state resources)
-  (SDL:enable-key-repeat 200 80)
+  (key-repeat-on)
 
   (menu-define 
     (SDL:render-text (find-font resources "peleja16") ">" WHITE)
-      (find-font resources "peleja16") BLACK RED 
+      (find-font resources "peleja16") WHITE RED 
     '(("Play" do-nothing)
       ("Settings" do-nothing)
       ("Exit" do-nothing)
