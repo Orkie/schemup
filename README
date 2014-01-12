@@ -32,3 +32,4 @@ for GUI elements.
 Probably want a common function to handle the actual changeover point between two 
 scenes: calling focus/unfocus etc. and building the pair to return?
 
+All menu select handlers should take unlimited args - and just look at the first N that they care about (use a let or something to bind them? or maybe I could have a macro to define a function with fixed number of args, but which translates it underneath you?)
