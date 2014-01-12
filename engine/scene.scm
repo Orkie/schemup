@@ -1,6 +1,6 @@
 (define-module (engine scene)
   #:export (make-scene scene-resources scene-render scene-handle-key-up scene-handle-key-down scene-update 
-            do-nothing key-repeat-on key-repeat-off
+            do-nothing key-repeat-on key-repeat-off handle-quit
             make-resources find-image find-font find-music find-sound))
 (use-modules 	(stdlib print)
               (stdlib logging)
@@ -88,4 +88,13 @@
     (if (not sound)
       (log! 'ERROR "Could not load sound " filename)
       sound)))
+      
+; what to do when shutting down?
+; handle quit event
+(define (handle-quit . args)
+  (SDL:close-audio)
+  (SDL:ttf-quit)
+	(SDL:quit)
+	(quit)
+	)
 
