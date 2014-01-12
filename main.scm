@@ -13,14 +13,6 @@
               (engine drawing)
 							(game game))
 							
-; handle quit event
-(define (handle-quit)
-  (SDL:close-audio)
-  (SDL:ttf-quit)
-	(SDL:quit)
-	(quit)
-	)
-	
 ; event handler
 (define (handle-event scene state)
 	(let ((e (SDL:make-event)))

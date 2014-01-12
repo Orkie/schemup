@@ -16,6 +16,7 @@
 	(case key
     ((up) (menu-up state))
     ((down) (menu-down state))
+    ((space) (menu-select state '(1 2)))
 		;((escape) (handle-quit))
 		(else do-nothing))
 	)
@@ -37,16 +38,13 @@
 
 (define (make-initial-title-state resources)
   (key-repeat-on)
-
+  (log! 'DEBUG "proc? " (procedure? do-nothing) (apply do-nothing '(1 2)))
   (menu-define 
     (SDL:render-text (find-font resources "peleja16") ">" WHITE)
       (find-font resources "peleja16") WHITE RED 
-    '(("Play" do-nothing)
-      ("Settings" do-nothing)
-      ("Exit" do-nothing)
-      ("Exit" do-nothing)
-      ("Exit" do-nothing)
-      ("Exit" do-nothing)))
+    `(("Play" ,(lambda (x y) (display "yo\n")))
+      ("Settings" ,do-nothing)
+      ("Exit" ,handle-quit)))
   )
 	
 (define (make-title-scene) 
